@@ -4,7 +4,6 @@
 #include "simulator.h"
 
 int main(int argc, char *argv[]) {
-    // Expected arguments: ./simulator <algorithm> <file.log> <page_size> <mem_size>
     if (argc < 5) {
         fprintf(stderr, "Usage: %s <algorithm> <file.log> <page_size_kb> <mem_size_kb>\n", argv[0]);
         return 1;
@@ -17,7 +16,7 @@ int main(int argc, char *argv[]) {
 
     srand(time(NULL));
 
-    // Calculate shift value 's' based on page size (in bytes)
+    // Calcula o shift 's' baseado no tamanho da página em bytes
     unsigned tmp = page_size * 1024;
     unsigned s = 0;
     while (tmp > 1) {
@@ -25,7 +24,6 @@ int main(int argc, char *argv[]) {
         s++;
     }
 
-    // Calculate total frames
     unsigned num_frames = mem_size / page_size;
     init_memory(num_frames);
 
@@ -39,7 +37,6 @@ int main(int argc, char *argv[]) {
     unsigned address;
     char rw;
 
-    // Read the log file line by line
     while (fscanf(file, "%x %c", &address, &rw) != EOF) {
         unsigned page = address >> s;
         process_access(page, rw, algorithm);
