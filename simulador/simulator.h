@@ -9,9 +9,15 @@ typedef struct {
     unsigned last_access_time;
 } Frame;
 
+typedef struct {
+    int frame_allocated;
+    int replaced;
+    unsigned replaced_vpage;
+} AccessResult;
+
 void init_memory(unsigned num_frames);
 void free_memory();
-void process_access(unsigned page, char rw, char *algorithm);
+AccessResult process_access(unsigned page, char rw, char *algorithm);
 void print_report(char *algorithm, char *filename, unsigned page_size, unsigned mem_size);
 
 #endif

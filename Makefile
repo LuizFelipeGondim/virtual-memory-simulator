@@ -1,18 +1,25 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -O2
-TARGET = simulator
-OBJS = main.o simulator.o
+CC      = gcc
+CFLAGS  = -Wall -Wextra -O2 -Isimulador -Itables
+TARGET  = simulator
+
+SRCS = main.c \
+       simulador/simulator.c \
+       tables/dense.c \
+       tables/twoLevel.c \
+       tables/threeLevel.c \
+       tables/inverted.c
+
+OBJS = $(SRCS:.c=.o)
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
 
-main.o: main.c simulator.h
-	$(CC) $(CFLAGS) -c main.c
-
-simulator.o: simulator.c simulator.h
-	$(CC) $(CFLAGS) -c simulator.c
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f *.o $(TARGET)
+	rm -f $(OBJS) $(TARGET)
+
+.PHONY: all clean

@@ -3,6 +3,8 @@
 #include <string.h>
 #include "simulator.h"
 
+
+
 Frame *physical_memory = NULL;
 unsigned total_frames = 0;
 unsigned global_time = 0;
@@ -13,11 +15,14 @@ unsigned dirty_pages_written = 0;
 
 static unsigned clock_hand = 0;
 
+
+//memória fisica é criada como um vetor de frames
 void init_memory(unsigned num_frames) {
     total_frames = num_frames;
     physical_memory = (Frame *)malloc(num_frames * sizeof(Frame));
     
     for (unsigned i = 0; i < num_frames; i++) {
+        physical_memory[i].virtual_page = 0;
         physical_memory[i].is_occupied = 0;
         physical_memory[i].r_bit = 0;
         physical_memory[i].m_bit = 0;
@@ -86,7 +91,8 @@ int select_victim(char *algorithm) {
     return 0; 
 }
 
-void process_access(unsigned page, char rw, char *algorithm) {
+AccessResult process_access(unsigned page, char rw, char *algorithm) {
+    AccessResult res = {0, 0, 0};
     total_accesses++;
     global_time++;
 
@@ -105,7 +111,8 @@ void process_access(unsigned page, char rw, char *algorithm) {
                 physical_memory[i].m_bit = 1;
             }
             physical_memory[i].last_access_time = global_time;
-            return;
+            res.frame_allocated = i;
+            return res;
         }
     }
 
@@ -118,7 +125,8 @@ void process_access(unsigned page, char rw, char *algorithm) {
             physical_memory[i].r_bit = 1;
             physical_memory[i].m_bit = (rw == 'W') ? 1 : 0;
             physical_memory[i].last_access_time = global_time;
-            return;
+            res.frame_allocated = i;
+            return res;
         }
     }
 
@@ -130,11 +138,17 @@ void process_access(unsigned page, char rw, char *algorithm) {
         dirty_pages_written++;
     }
 
+    res.replaced = 1;
+    res.replaced_vpage = physical_memory[victim_index].virtual_page;
+
     // Substitui a página velha pela nova
     physical_memory[victim_index].virtual_page = page;
     physical_memory[victim_index].r_bit = 1;
     physical_memory[victim_index].m_bit = (rw == 'W') ? 1 : 0;
     physical_memory[victim_index].last_access_time = global_time;
+    
+    res.frame_allocated = victim_index;
+    return res;
 }
 
 void print_report(char *algorithm, char *filename, unsigned page_size, unsigned mem_size) {
