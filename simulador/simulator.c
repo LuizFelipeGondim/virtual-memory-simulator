@@ -3,8 +3,6 @@
 #include <string.h>
 #include "simulator.h"
 
-
-
 Frame *physical_memory = NULL;
 unsigned total_frames = 0;
 unsigned global_time = 0;
@@ -15,8 +13,7 @@ unsigned dirty_pages_written = 0;
 
 static unsigned clock_hand = 0;
 
-
-//memória fisica é criada como um vetor de frames
+// Memória física é criada como um vetor de frames
 void init_memory(unsigned num_frames) {
     total_frames = num_frames;
     physical_memory = (Frame *)malloc(num_frames * sizeof(Frame));
@@ -85,7 +82,7 @@ int select_victim(char *algorithm) {
         return 0;
     } 
     else if (strcmp(algorithm, "random") == 0) {
-        return rand() % total_frames;
+        return random() % total_frames;
     }
     
     return 0; 

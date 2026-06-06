@@ -9,21 +9,18 @@
  * Tamanho fixo de num_frames entradas (uma por frame físico).
  * Hash: virtual_page % num_frames
  * Colisões: encadeamento externo (lista ligada).
- *
- * Vantagem: uso de memória proporcional ao número de frames,
- * independente do tamanho do espaço de endereçamento virtual.
  */
 typedef struct InvertedEntry {
     unsigned virtual_page;
     int      frame;
     int      valid;
-    struct InvertedEntry *next;  /* próximo nó na cadeia de colisão */
+    struct InvertedEntry *next;
 } InvertedEntry;
 
 typedef struct {
-    InvertedEntry *buckets;  /* vetor de num_frames entradas (buckets)       */
+    InvertedEntry *buckets;
     unsigned       num_frames;
-    unsigned       collision_nodes; /* nós extras alocados por colisão       */
+    unsigned       collision_nodes;
 } InvertedTable;
 
 void   create_inverted_table(unsigned num_frames);

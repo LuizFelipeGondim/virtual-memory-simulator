@@ -4,7 +4,6 @@
 
 static TwoLevelTable table;
 
-
 void create_two_level_table(unsigned page_bits) {
     table.p1_bits = page_bits / 2;
     table.p2_bits = page_bits - table.p1_bits;
@@ -20,10 +19,8 @@ void create_two_level_table(unsigned page_bits) {
 
 }
 
-
 static inline unsigned idx1(unsigned vpage) { return vpage >> table.p2_bits; }
 static inline unsigned idx2(unsigned vpage) { return vpage & (table.p2_size - 1); }
-
 
 int lookup_two_level(unsigned virtual_page) {
     unsigned i1 = idx1(virtual_page);
@@ -32,7 +29,6 @@ int lookup_two_level(unsigned virtual_page) {
     if (table.dir[i1] == NULL) return -1;
     return table.dir[i1][i2];
 }
-
 
 void insert_two_level(unsigned virtual_page, int frame) {
     unsigned i1 = idx1(virtual_page);
@@ -62,7 +58,6 @@ void invalidate_two_level(unsigned virtual_page) {
     }
 }
 
-
 void free_two_level_table() {
     if (table.dir) {
         for (unsigned i = 0; i < table.p1_size; i++) {
@@ -74,7 +69,6 @@ void free_two_level_table() {
         table.dir = NULL;
     }
 }
-
 
 size_t memory_usage_two_level() {
     size_t dir_cost  = (size_t)table.p1_size * sizeof(int *);

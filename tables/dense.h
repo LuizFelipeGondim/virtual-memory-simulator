@@ -3,8 +3,16 @@
 
 #include <stddef.h>
 
+/*
+ * Tabela de Páginas Densa (Convencional)
+ *
+ * É alocada contiguamente na memória com um tamanho proporcional
+ * ao número total de páginas virtuais suportadas. Cada entrada da 
+ * tabela corresponde a uma página virtual e contém o número do
+ * quadro de memória física (ou -1 se não estiver na memória física).
+ */
 typedef struct {
-    int *entries;       // entries[vpage] = frame_index, ou -1 se inválida
+    int *entries;
     unsigned total_pages;
 } DenseTable;
 

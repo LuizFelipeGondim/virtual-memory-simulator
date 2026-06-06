@@ -3,9 +3,19 @@
 
 #include <stddef.h>
 
-
+/*
+ * Tabela Hierárquica de 3 Níveis
+ *
+ * O número de bits do número de página (page_bits = 32 - s) é dividido:
+ *   p1_bits = page_bits / 3                    → índice no diretório (1º nível)
+ *   p2_bits = page_bits / 3                    → índice na tabela de 2º nível
+ *   p3_bits = page_bits - p1_bits - p2_bits    → índice na tabela de 3º nível
+ *
+ * O diretório (nível 1) é sempre alocado com p1_size entradas (ponteiros).
+ * As tabelas de 2º e 3º nível são alocadas SOB DEMANDA, economizando memória.
+ */
 typedef struct {
-    int ***dir;    
+    int ***dir;
     unsigned p1_bits, p2_bits, p3_bits;
     unsigned p1_size, p2_size, p3_size;
     unsigned l2_allocated; 

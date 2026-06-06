@@ -14,12 +14,12 @@
  * As tabelas de 2º nível são alocadas SOB DEMANDA, economizando memória.
  */
 typedef struct {
-    int    **dir;       /* dir[i1] → tabela de 2º nível ou NULL              */
+    int    **dir;
     unsigned p1_bits;
     unsigned p2_bits;
-    unsigned p1_size;   /* 1 << p1_bits */
-    unsigned p2_size;   /* 1 << p2_bits */
-    unsigned pages_allocated; /* quantidade de tabelas de 2º nível alocadas */
+    unsigned p1_size;
+    unsigned p2_size;
+    unsigned pages_allocated;
 } TwoLevelTable;
 
 void   create_two_level_table(unsigned page_bits);

@@ -4,9 +4,6 @@
 
 static ThreeLevelTable table;
 
-//Cria a tabela de 3 níveis.
-//page_bits divididos: p1 = bits/3, p2 = bits/3, p3 = restante.
-//Apenas o nível 1 é alocado agora; níveis 2 e 3 sob demanda.
 void create_three_level_table(unsigned page_bits) {
     table.p1_bits = page_bits / 3;
     table.p2_bits = page_bits / 3;
@@ -31,7 +28,6 @@ static inline unsigned idx1(unsigned vp) { return vp >> (table.p2_bits + table.p
 static inline unsigned idx2(unsigned vp) { return (vp >> table.p3_bits) & (table.p2_size - 1); }
 static inline unsigned idx3(unsigned vp) { return vp & (table.p3_size - 1); }
 
-//Consulta: três acessos de memória.
 int lookup_three_level(unsigned virtual_page) {
     unsigned i1 = idx1(virtual_page);
     unsigned i2 = idx2(virtual_page);
@@ -42,14 +38,13 @@ int lookup_three_level(unsigned virtual_page) {
     return table.dir[i1][i2][i3];
 }
 
-//Insere mapeamento, alocando os níveis 2 e 3 se necessário.
+// Insere mapeamento, alocando os níveis 2 e 3 se necessário.
 void insert_three_level(unsigned virtual_page, int frame) {
     unsigned i1 = idx1(virtual_page);
     unsigned i2 = idx2(virtual_page);
     unsigned i3 = idx3(virtual_page);
     if (i1 >= table.p1_size) return;
 
-    //Alocar nível 2 se necessário
     if (table.dir[i1] == NULL) {
         table.dir[i1] = (int **)calloc(table.p2_size, sizeof(int *));
         if (!table.dir[i1]) {
@@ -74,7 +69,6 @@ void insert_three_level(unsigned virtual_page, int frame) {
     table.dir[i1][i2][i3] = frame;
 }
 
-
 void invalidate_three_level(unsigned virtual_page) {
     unsigned i1 = idx1(virtual_page);
     unsigned i2 = idx2(virtual_page);
@@ -85,7 +79,6 @@ void invalidate_three_level(unsigned virtual_page) {
         table.dir[i1][i2][i3] = -1;
     }
 }
-
 
 void free_three_level_table() {
     if (!table.dir) return;
@@ -101,7 +94,6 @@ void free_three_level_table() {
     free(table.dir);
     table.dir = NULL;
 }
-
 
 size_t memory_usage_three_level() {
     size_t l1 = (size_t)table.p1_size * sizeof(int **);
