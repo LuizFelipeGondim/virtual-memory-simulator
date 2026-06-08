@@ -156,7 +156,7 @@ int main(int argc, char *argv[]) {
 
     FILE *file = fopen(filename, "r");
     if (!file) {
-        fprintf(stderr, "Erro: não foi possível abrir '%s'\n", filename);
+        fprintf(stderr, "Erro: Não foi possível abrir '%s'\n", filename);
         free_active_resources(use_dense, use_two, use_three, use_inv);
         return 1;
     }

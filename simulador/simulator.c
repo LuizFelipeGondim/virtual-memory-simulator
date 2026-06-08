@@ -85,7 +85,9 @@ int select_victim(char *algorithm) {
         return random() % total_frames;
     }
     
-    return 0; 
+    fprintf(stderr, "\nErro: Algoritmo de substituicao desconhecido: '%s'\n", algorithm);
+    fprintf(stderr, "Use apenas: lru, nru, clock ou random (em letras minusculas).\n\n");
+    exit(EXIT_FAILURE);
 }
 
 AccessResult process_access(unsigned page, char rw, char *algorithm) {
